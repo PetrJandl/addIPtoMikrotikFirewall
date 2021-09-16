@@ -1,2 +1,6 @@
 application/config/routeros.php
-application/logs/*.php
+#codeigniter 3
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess
+
