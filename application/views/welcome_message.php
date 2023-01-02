@@ -163,7 +163,7 @@ function timerUp()
 		<?php
 		    echo $message;
 		?>
-<div class="text-right">V tuto chvíli je povoleno : <?php echo number_format($allAllowIP,0,",","."); ?> adres.</div>
+<div class="text-right">V tuto chvíli je povoleno : <?php echo number_format($allAllowIP,0,",","."); ?> adres tedy cca <?=round( $allAllowIP / ( (4*pow(10,9))/100 ),2 )?>% všech možných vIP.</div>
 	</div>
 
 	<p class="footer">Knihovna města Hradce Králové &copy; 2018</p>

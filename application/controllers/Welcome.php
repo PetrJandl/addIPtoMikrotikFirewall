@@ -132,10 +132,10 @@ AND
 					$data['message'].="Addresa (blok) je na whitelistu.<br />";
 				}
 				if(!$row->active){
-					$data['message'].="<span class=\"red\">Vyčkejte na aktivaci .. <span id=\"timer\"></span></span> (max. 60 vteřin).";
+					$data['message'].="<h2 class=\"red\">Vyčkejte na aktivaci .. <span id=\"timer\"></span></h2> (max. 60 vteřin).";
 					$data['reload']=true;
 				}else{
-					$data['message'].="<span class=\"green\">Adresa je aktivovana!</span>";
+					$data['message'].="<h2 class=\"green\">Adresa je aktivovana!</h2>";
 				}
 				
 				
