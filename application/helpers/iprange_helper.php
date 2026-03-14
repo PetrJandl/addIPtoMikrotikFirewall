@@ -1,11 +1,26 @@
 <?php
 
 function checkiprange($needle, $start, $end) {
+
+    $needle = ip2long($needle);
+    $start  = ip2long($start);
+    $end    = ip2long($end);
+
+    if ($needle === false || $start === false || $end === false) {
+        return false;
+    }
+
+    return ($needle >= $start && $needle <= $end);
+}
+
+/*
+function checkiprange($needle, $start, $end) {
   if((ip2long($needle) >= ip2long($start)) && (ip2long($needle) <= ip2long($end))) {
     return true;
   }
   return false;
 }
+*/
 
 function iprange2cidr($ipStart, $ipEnd){
     if (is_string($ipStart) || is_string($ipEnd)){
@@ -48,3 +63,20 @@ function ip_range($ip1, $ip2){
     return 1 + Math.abs( $ip2l - $ip1l );
 }
 
+function ip_to_cidr20($ip)
+{
+    $ipLong = ip2long($ip);
+    if ($ipLong === false) {
+        throw new Exception("Invalid IP");
+    }
+
+    $mask = -1 << (32 - 20);
+    $network = $ipLong & $mask;
+    $broadcast = $network | ~$mask;
+
+    return [
+        'cidr' => long2ip($network) . '/20',
+        'rangeBegin' => long2ip($network),
+        'rangeEnd' => long2ip($broadcast)
+    ];
+}

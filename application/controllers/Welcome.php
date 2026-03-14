@@ -42,62 +42,20 @@ class Welcome extends CI_Controller {
 			if(isset($_POST['g-recaptcha-response'])){
 	 			$recaptcha = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$this->config->item('recap_secret').'&response=' . $_POST['g-recaptcha-response']));
                         	if($recaptcha->{'success'} == 'true'){
-					        include_once( APPPATH . 'third_party/phpwhois/src/whois.main.php');
-					        //include_once( APPPATH . 'third_party/phpwhois/src/whois.utils.php');
 
-					        $whois = new Whois();
-						//$utils = new Utils;
-
-					        // Set to true if you want to allow proxy requests
-					        $allowproxy = false;
-
-					        // get faster but less acurate results^M
-					        $whois->deep_whois = true;
-
-					        // Comment the following line to disable support for non ICANN tld's
-					        $whois->non_icann = true;
-
-					        $result = $whois->Lookup($data['ip']);
-
-						if(!isset($result['rawdata'][0])){
-							$whois->deep_whois = false;
-							$result = $whois->Lookup($data['ip']);
-						}
-					        //echo "<pre>";
- 						//print_r($result['rawdata']);
-						//die();
-						foreach($result['rawdata'] as $num => $line){
-							if(strpos($line, 'NetRange:')!== false OR strpos($line, 'range')!== false OR strpos($line, 'inetnum:')!== false){
-								$NetRange=explode(":", $line);
-							}
-							if(strpos($line, 'CIDR:')!== false OR strpos($line, 'route:')!== false){
-                                                                $CIDR=explode(":", $line);
-                                                        }
-							if(strpos($line, 'country')!== false OR strpos($line, 'Country')!== false){
-                                                                $zem=explode(":", $line);
-                                                        }
-							if(strpos($line, 'org-name')!== false OR strpos($line, 'descr')!== false OR strpos($line, 'Organization')!== false){
-                                                                $descr[]=explode(":", $line);
-                                                        }
-
-						}
-						$range=explode("-", trim($NetRange[1]));
-						$min=trim($range[0]);
-						$max=trim($range[1]);
-						$cidr=trim($CIDR[1]);
-						$country=trim($zem[1]);
-						
-						$des="";
-						foreach ($descr as $n => $desc){
-							$des.=trim($desc[1].",");
-						}
-						$des=rtrim($des,",");
-						
-						
+						$c=ip_to_cidr20($data['ip']);	
 						//echo "Min: ". $min . " Max: ". $max . " CIDR:".$cidr;
 						//die();
 
-					$this->db->insert('IMAPwhiteList', array('ip' => $data['ip'], 'network' => $cidr, 'rangeBegin' => $min, 'rangeEnd' => $max, 'comment' => $country.", ".$des ));
+					//$this->db->insert('IMAPwhiteList', array('ip' => $data['ip'], 'network' => $cidr, 'rangeBegin' => $min, 'rangeEnd' => $max, 'comment' => $country.", ".$des ));
+					$this->db->insert('IMAPwhiteList', 
+						array(
+							'ip' => $data['ip'],
+							'network' => $c['cidr'],
+							'rangeBegin' => $c['rangeBegin'],
+							'rangeEnd' => $c['rangeEnd'],
+							'comment'=>$data['ip'] ));
+					
 					if($this->db->affected_rows()==1){
  						$data['message'].="<div class=\"green\">Adresa vlozena do DB!</div>";
 						$insert=true;

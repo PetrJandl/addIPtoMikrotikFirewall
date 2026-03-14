@@ -157,7 +157,7 @@ function timerUp()
 <body <?php if(isset($reload)){ ?>onload="startTimer()"<?php } ?>>
 
 <div id="container">
-	<h1>Vítej! <?php echo $ip; ?></h1>
+	<h1>Vítej! <a href="mailto:it&#064;knihovnahk.cz?subject=ip.kmhk.cz&body=IP%20<?php echo $ip;?>%20je%20aktivována!%0A%0A%0A"><?php echo $ip; ?></a></h1>
 
 	<div id="body">
 		<?php
